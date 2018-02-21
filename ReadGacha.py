@@ -17,8 +17,8 @@ def singleGacha(dct,overall,times):
     return keys
 
 def __readGacha(type,region):
-    url = "http://cms.mihoyo.com/mihoyo/hsod2_gacha_rules/index.php/gacha/" + type + "?region=" + str(region) + "_1"
-    # url = "http://127.0.0.1/gacha/high/18/high.html"
+    # url = "http://cms.mihoyo.com/mihoyo/hsod2_gacha_rules/index.php/gacha/" + type + "?region=" + str(region) + "_1"
+    url = "http://127.0.0.1/gacha/high/18/"
     res = requests.get(url)
     res.encoding = "utf-8"      # encode the res data in order to correctly display Chinese
     soup = BeautifulSoup(res.text,"lxml")
@@ -60,24 +60,25 @@ def __readGacha(type,region):
                 continue
             td = tr.find_all("td")
 
-            if(td[1].text == "使魔碎片" and td[0].text != "源初虹石"):      #To add pieces into the keys
+            # if(td[1].text == "使魔碎片" and td[0].text != "源初虹石"):      #To add pieces into the keys
+            if(td[1].text == "使魔碎片"):
                 index = -1
-                if(petPieces > 9):
-                    petPieces = 4
-                petName = td[0].text
-                petName += "*" + str(petPieces)
-                petPieces += 1
-                equimentsList[petName] = float(td[2].text[:-1]),td[1].text,False,False
+                # if(petPieces > 9):
+                #     petPieces = 4
+                # petName = td[0].text
+                # petName += "*" + str(petPieces)
+                # petPieces += 1
+                equimentsList[td[0].text] = float(td[2].text[:-1]),td[1].text,False,False
                 total = total + float(td[2].text[:-1])
                 continue
-            elif(td[0].text == "源初虹石"):
-                index = -1
-                petName = td[0].text
-                petName += "*" + str(hongShi)
-                hongShi += 1
-                equimentsList[petName] = float(td[2].text[:-1]),td[1].text,False,False
-                total = total + float(td[2].text[:-1])
-                continue
+            # elif(td[0].text == "源初虹石"):
+            #     index = -1
+            #     petName = td[0].text
+            #     petName += "*" + str(hongShi)
+            #     hongShi += 1
+            #     equimentsList[petName] = float(td[2].text[:-1]),td[1].text,False,False
+            #     total = total + float(td[2].text[:-1])
+            #     continue
 
             if(index != -1):
                 godList.append(td[0].text)
@@ -158,7 +159,8 @@ def gacha(type,region,times):
 
 
 if __name__ == "__main__":
+    # 0 is ReadGacha  1 is the first arg means the times of singel gacha.  2 is the times of bundle gacha   3 is the type of bundle gacha
     if(len(sys.argv)!=1):
         gacha('high',18,int(sys.argv[1]))
     else:
-        gacha('high',18,100)
+        gacha('high',18,20)
